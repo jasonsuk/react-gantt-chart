@@ -1,11 +1,57 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import { Chart } from 'react-google-charts';
 
+import { listRecords } from '../redux/actions/recordActions.js';
+
 const Gantt = () => {
+    const dispatch = useDispatch();
+
+    const recordList = useSelector((state) => state.recordList);
+    const { records } = recordList;
+
+    // Extract relevant information
     const daysToMilliseconds = (days) => {
         return days * 24 * 60 * 60 * 1000;
     };
+
+    const columnStructure = [
+        { type: 'string', label: 'Task ID' },
+        { type: 'string', label: 'Task Name' },
+        { type: 'date', label: 'Start Date' },
+        { type: 'date', label: 'End Date' },
+        { type: 'number', label: 'Duration' },
+        { type: 'number', label: 'Percent Complete' },
+        { type: 'string', label: 'Dependencies' },
+    ];
+
+    const data = records.map((record) => {
+        return [
+            record.task_id,
+            record.task_name,
+            record.start_date ? new Date(record.start_date) : null,
+            record.end_date ? new Date(record.end_date) : null,
+            record.duration
+                ? daysToMilliseconds(Number(record.duration))
+                : null,
+            record.percent_complete ? record.percent_complete : null,
+            record.dependencies ? record.dependencies : null,
+        ];
+    });
+
+    console.log(data);
+    // Object.keys(data).map((key) => console.log(data[key]));
+
+    useEffect(() => {
+        dispatch(listRecords());
+    }, [dispatch]);
+
+    // Helper functions //
+
+    // const weeksToMilliseconds = (weeks) => {
+    //     return weeks * 7 * 24 * 60 * 60 * 1000;
+    // };
 
     return (
         <Container className="my-4 p-4">
@@ -15,15 +61,7 @@ const Gantt = () => {
                 chartType="Gantt"
                 loader={<div>Loading Chart</div>}
                 data={[
-                    [
-                        { type: 'string', label: 'Task ID' },
-                        { type: 'string', label: 'Task Name' },
-                        { type: 'date', label: 'Start Date' },
-                        { type: 'date', label: 'End Date' },
-                        { type: 'number', label: 'Duration' },
-                        { type: 'number', label: 'Percent Complete' },
-                        { type: 'string', label: 'Dependencies' },
-                    ],
+                    columnStructure,
                     [
                         'Research',
                         'Find sources',
