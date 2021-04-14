@@ -11,7 +11,6 @@ export const listRecords = () => async (dispatch) => {
         dispatch({ type: RECORD_LIST_REQUEST });
 
         const { data } = await axios.get('/api/records');
-        console.log(data);
 
         dispatch({ type: RECORD_LIST_SUCCESS, payload: data });
     } catch (error) {
