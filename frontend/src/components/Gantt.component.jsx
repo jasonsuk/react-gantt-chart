@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
 import Chart from 'react-google-charts';
 
 import { Container } from 'react-bootstrap';
 
-import { listTasks } from '../redux/actions/taskActions.js';
+// import { listTasks } from '../redux/actions/taskActions.js';
 
 // const sampleData = [
 //     [
@@ -53,27 +53,27 @@ const getData = (tasks) => {
 };
 
 // Constructing Gantt component
-const Gantt = () => {
-    const dispatch = useDispatch();
-
-    const taskList = useSelector((state) => state.taskList);
-    const { tasks } = taskList;
-
-    // console.log(data);
-
-    useEffect(() => {
-        if (tasks) {
-            console.log('Tasks loaded');
-        } else {
-            dispatch(listTasks());
-        }
-    }, [dispatch, tasks]);
+const Gantt = ({ tasks }) => {
+    //     const dispatch = useDispatch();
+    //
+    //     const taskList = useSelector((state) => state.taskList);
+    //     const { tasks } = taskList;
+    //
+    //     // console.log(data);
+    //
+    //     useEffect(() => {
+    //         if (tasks) {
+    //             console.log('Tasks loaded');
+    //         } else {
+    //             dispatch(listTasks());
+    //         }
+    //     }, [dispatch, tasks]);
 
     return (
         <Container style={{ display: 'flex' }} className="my-4">
             <Chart
                 width={'100%'}
-                height={'400px'}
+                height={'800px'}
                 chartType="Gantt"
                 loader={<div>Loading Chart</div>}
                 data={tasks ? getData(tasks) : []}

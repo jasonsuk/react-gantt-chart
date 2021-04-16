@@ -3,38 +3,76 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ButtonGroup, Button, Container, Row, Col } from 'react-bootstrap';
 
 import Gantt from '../components/Gantt.component.jsx';
-import EditModal from '../components/Modal.component.jsx';
+import EditModal from '../components/editModal.component.jsx';
+import DeleteModal from '../components/deleteModal.component.jsx';
 
 import { createTask, listTasks } from '../redux/actions/taskActions.js';
 import { TASK_CREATE_RESET } from '../redux/constants/taskConstants.js';
 
-const HomePage = () => {
-    const [showModal, setShowModal] = useState(false);
+const HomePage = ({ history }) => {
+    const [editModal, setEditModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     const dispatch = useDispatch();
+
+    const taskList = useSelector((state) => state.taskList);
+    const { tasks } = taskList;
 
     const taskCreate = useSelector((state) => state.taskCreate);
     const { success: successCreateTask } = taskCreate;
 
     useEffect(() => {
         if (successCreateTask) {
-            dispatch({ type: TASK_CREATE_RESET });
-            setShowModal(true);
+            setEditModal(true);
         } else {
-            dispatch(listTasks());
+            if (tasks) {
+                console.log('Tasks loaded');
+            } else {
+                dispatch(listTasks());
+            }
         }
-    }, [dispatch, successCreateTask, setShowModal]);
+    }, [dispatch, successCreateTask, tasks]);
 
+    // Create new task //
     const createTaskHandler = () => {
         console.log('Creating task');
         dispatch(createTask());
     };
+
+    // Edit task //
     const editTaskHandler = () => {
         console.log('Editing task');
-        setShowModal(true);
+        setEditModal(true);
     };
+
+    const saveEditTaskHandler = () => {
+        console.log('Edited task');
+        setEditModal(false);
+        history.push('/');
+    };
+
+    const hideEditModalHandler = () => {
+        console.log('Hiding edit modal');
+        setEditModal(false);
+        dispatch({ type: TASK_CREATE_RESET });
+        history.push('/');
+    };
+
+    // Delete task //
     const deleteTaskHandler = () => {
         console.log('Deleting task');
+        setDeleteModal(true);
+    };
+
+    const saveDeleteTaskHandler = () => {
+        console.log('Deleted task');
+        setDeleteModal(false);
+    };
+
+    const hideDeleteModalHandler = () => {
+        console.log('Hiding delete modal');
+        setDeleteModal(false);
+        // dispatch({ type: TASK_CREATE_RESET });
     };
 
     const currentDate = new Date().toDateString();
@@ -60,8 +98,18 @@ const HomePage = () => {
                 </Col>
             </Row>
 
-            <Gantt />
-            <EditModal show={showModal} />
+            <Gantt tasks={tasks} />
+            <EditModal
+                showEdit={editModal}
+                hideEditModalHandler={hideEditModalHandler}
+                saveEditTaskHandler={saveEditTaskHandler}
+            />
+            <DeleteModal
+                showDelete={deleteModal}
+                hideDeleteModalHandler={hideDeleteModalHandler}
+                saveDeleteTaskHandler={saveDeleteTaskHandler}
+                tasks={tasks && tasks}
+            />
         </Container>
     );
 };
