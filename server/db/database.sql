@@ -1,23 +1,23 @@
 -- Create 'records' table
-CREATE TABLE IF NOT EXISTS records (
-  task_id VARCHAR(8) NOT NULL,
+CREATE TABLE IF NOT EXISTS tasks (
+  task_id SERIAL PRIMARY KEY,
   task_name VARCHAR(128) NOT NULL,
-  start_date DATE,
+  resource VARCHAR(512),
+  start_date DATE NOT NULL,  
   end_date DATE NOT NULL,
-  duration INTEGER,
-  percent_complete FLOAT,
-  dependencies VARCHAR(8) ARRAY,
-  PRIMARY KEY (task_id)
+  duration INTEGER NOT NULL,
+  percent_complete INTEGER NOT NULL,
+  dependencies INTEGER ARRAY
 );
 
 -- INSERT sample data for testing
-INSERT INTO records 
+INSERT INTO tasks (task_name, resource, start_date, end_date, duration, percent_complete, dependencies)
 VALUES 
-  ('Proj0001', 'Find sources', '2015-01-01', '2015-01-05', null, 100, null),
-  ('Proj0002', 'Write paper',null, '2015-01-09', 3, 25, ARRAY['Proj0001']),
-  ('Proj0003', 'Create biliography', null, '2015-01-07', 1, 20, ARRAY['Proj0002']),
-  ('Proj0004', 'Hand in paper', null, '2015-01-10', 1, 0, ARRAY['Proj0002', 'Proj0003']),
-  ('Proj0005', 'Outline paper', null, '2015-01-06', 1, 100, ARRAY['Proj0001'])
+  ('Find sources', null, '2015-01-01', '2015-01-05', 4, 100, null),
+  ('Write paper', null, '2015-01-06', '2015-01-09', 3, 25, null),
+  ('Create biliography', null, '2015-01-07', '2015-01-08', 1, 20, null),
+  ('Hand in paper', null, '2015-01-09', '2015-01-10', 1, 0, null),
+  ('Outline paper', null, '2015-01-05', '2015-01-06', 1, 100, null)
   ;
 
   

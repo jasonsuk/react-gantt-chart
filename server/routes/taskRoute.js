@@ -1,10 +1,10 @@
 import express from 'express';
 
-import { getRecords } from '../controllers/recordController.js';
+import { createTask, getTasks } from '../controllers/taskController.js';
 
 const router = express.Router();
 
-router.route('/').get(getRecords);
+router.route('/').get(getTasks).post(createTask);
 // router.route('/:id/timeline').put(updateRecords);
 
 export default router;

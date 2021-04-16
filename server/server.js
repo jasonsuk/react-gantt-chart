@@ -2,7 +2,7 @@ import express from 'express';
 // import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import recordRouter from './routes/recordRoute.js';
+import taskRouter from './routes/taskRoute.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 // Environmental variables
@@ -19,9 +19,10 @@ if (process.env.NODE_ENV === 'development') {
 // Middlewares //
 // app.use(cors());
 app.use(express.json());
+// app.disable('etag');
 
 // Routes //
-app.use('/api/records', recordRouter);
+app.use('/api/tasks', taskRouter);
 
 // Error handler //
 app.use(notFound);
