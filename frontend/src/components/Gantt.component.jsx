@@ -1,23 +1,34 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Chart from 'react-google-charts';
+
 import { Container } from 'react-bootstrap';
-import { Chart } from 'react-google-charts';
 
-import { listRecords } from '../redux/actions/recordActions.js';
+import { listTasks } from '../redux/actions/taskActions.js';
 
-const Gantt = () => {
-    const dispatch = useDispatch();
+// const sampleData = [
+//     [
+//         { type: 'string', label: 'Task ID' },
+//         { type: 'string', label: 'Task Name' },
+//         { type: 'string', label: 'Resource' },
+//         { type: 'date', label: 'Start Date' },
+//         { type: 'date', label: 'End Date' },
+//         { type: 'number', label: 'Duration' },
+//         { type: 'number', label: 'Percent Complete' },
+//         { type: 'string', label: 'Dependencies' },
+//     ],
+//     ['toTrain', 'Walk to train stop', 'strain', null, null, 2, 100, null],
+//     ['music', 'Listen to music', 'songs', null, null, 2, 100, null],
+//     ['wait', 'Wait for train', 'train', null, null, 2, 0, 'toTrain'],
+// ];
 
-    const recordList = useSelector((state) => state.recordList);
-    const { loading, error, records } = recordList;
-
-    useEffect(() => {
-        dispatch(listRecords());
-    }, [dispatch]);
-
-    const columnStructure = [
+// Helper function
+const getData = (tasks) => {
+    const data = [];
+    const columns = [
         { type: 'string', label: 'Task ID' },
         { type: 'string', label: 'Task Name' },
+        { type: 'string', label: 'Resource' },
         { type: 'date', label: 'Start Date' },
         { type: 'date', label: 'End Date' },
         { type: 'number', label: 'Duration' },
@@ -25,94 +36,52 @@ const Gantt = () => {
         { type: 'string', label: 'Dependencies' },
     ];
 
-    // Extract relevant information
-    const daysToMilliseconds = (days) => {
-        return days * 24 * 60 * 60 * 1000;
-    };
+    tasks.map((task) => {
+        return data.push([
+            task.task_id,
+            task.task_name,
+            task.resource,
+            new Date(task.start_date),
+            new Date(task.end_date),
+            task.duration,
+            task.percent_complete,
+            task.dependencies,
+        ]);
+    });
+    data.splice(0, 0, columns);
+    return data;
+};
 
-    const getData = (columnStructure, records) => {
-        const data = [];
+// Constructing Gantt component
+const Gantt = () => {
+    const dispatch = useDispatch();
 
-        records.map((record) => {
-            return data.push([
-                record.task_id,
-                record.task_name,
-                record.start_date ? new Date(record.start_date) : null,
-                record.end_date ? new Date(record.end_date) : null,
-                record.duration ? daysToMilliseconds(record.duration) : null,
-                record.precent_complete ? record.precent_complete : null,
-                record.dependencies ? record.dependencies.toString() : null,
-            ]);
-        });
+    const taskList = useSelector((state) => state.taskList);
+    const { tasks } = taskList;
 
-        data.splice(0, 0, [...columnStructure]);
-        return data;
-    };
+    // console.log(data);
+
+    useEffect(() => {
+        if (tasks) {
+            console.log('Tasks loaded');
+        } else {
+            dispatch(listTasks());
+        }
+    }, [dispatch, tasks]);
 
     return (
-        <Container className="my-4 p-4">
-            {!loading && !error && (
-                <Chart
-                    width={'100%'}
-                    height={'400px'}
-                    chartType="Gantt"
-                    loader={<div>Loading Chart</div>}
-                    data={records ? getData(columnStructure, records) : []}
-                    rootProps={{ 'data-testid': '1' }}
-                />
-            )}
+        <Container style={{ display: 'flex' }} className="my-4">
+            <Chart
+                width={'100%'}
+                height={'400px'}
+                chartType="Gantt"
+                loader={<div>Loading Chart</div>}
+                data={tasks ? getData(tasks) : []}
+                rootProps={{ 'data-testid': '1' }}
+                // explorer={{ actions: ['dragToZoom', 'rightClickToReset'] }}
+            />
         </Container>
     );
 };
 
 export default Gantt;
-
-//
-// const samples = [
-//     columnStructure,
-//     [
-//         'Research',
-//         'Find sources',
-//         new Date(2015, 0, 1),
-//         new Date(2015, 0, 5),
-//         null,
-//         100,
-//         null,
-//     ],
-//     [
-//         'Write',
-//         'Write paper',
-//         null,
-//         new Date(2015, 0, 9),
-//         daysToMilliseconds(3),
-//         25,
-//         'Research,Outline',
-//     ],
-//     [
-//         'Cite',
-//         'Create bibliography',
-//         null,
-//         new Date(2015, 0, 7),
-//         daysToMilliseconds(1),
-//         20,
-//         'Research',
-//     ],
-//     [
-//         'Complete',
-//         'Hand in paper',
-//         null,
-//         new Date(2015, 0, 10),
-//         daysToMilliseconds(1),
-//         0,
-//         'Cite,Write',
-//     ],
-//     [
-//         'Outline',
-//         'Outline paper',
-//         null,
-//         new Date(2015, 0, 6),
-//         daysToMilliseconds(1),
-//         100,
-//         'Research',
-//     ],
-// ];

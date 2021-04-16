@@ -2,10 +2,11 @@ import { combineReducers, applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { recordListReducer } from './reducers/recordReducers.js';
+import { taskListReducer, taskCreateReducer } from './reducers/taskReducers.js';
 
 const reducer = combineReducers({
-    recordList: recordListReducer,
+    taskList: taskListReducer,
+    taskCreate: taskCreateReducer,
 });
 
 const initialState = {};
