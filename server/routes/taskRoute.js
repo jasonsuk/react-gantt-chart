@@ -1,10 +1,14 @@
 import express from 'express';
 
-import { createTask, getTasks } from '../controllers/taskController.js';
+import {
+    getTasks,
+    createTask,
+    editTask,
+} from '../controllers/taskController.js';
 
 const router = express.Router();
 
 router.route('/').get(getTasks).post(createTask);
-// router.route('/:id/timeline').put(updateRecords);
+router.route('/:id/edit').put(editTask);
 
 export default router;

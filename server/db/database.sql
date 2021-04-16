@@ -20,6 +20,8 @@ VALUES
   ('Outline paper', null, '2015-01-05', '2015-01-06', 1, 100, null)
   ;
 
-  
+-- Add constraint to tasks table
+ALTER TABLE tasks
+ADD CHECK (end_date >= start_date);
 
 

@@ -40,3 +40,64 @@ export const createTask = asyncHandler(async (req, res) => {
 
     res.status(201).json(newTask.rows);
 });
+
+// @DESC: Edit task
+// @ROUTE: PUT /api/records/:id/edit
+// @ACCESS: Public
+
+export const editTask = asyncHandler(async (req, res) => {
+    const taskIdToSearch = req.params.id;
+
+    // Find task by id
+    const { rows } = await pool.query(
+        `SELECT * FROM tasks WHERE task_id = ${taskIdToSearch}`
+    );
+
+    const taskSearched = rows[0];
+
+    if (taskSearched) {
+        const {
+            taskName,
+            resource,
+            startDate,
+            endDate,
+            percentComplete,
+            dependencies,
+        } = req.body;
+
+        const editedTask = [
+            taskName || taskSearched.task_name,
+            resource || taskSearched.resource,
+            new Date(startDate) || taskSearched.start_date,
+            new Date(endDate) || taskSearched.end_date,
+            new Date(endDate) - new Date(startDate) ||
+                taskSearched.end_date - taskSearched.start_date,
+            percentComplete || taskSearched.percent_complete,
+            dependencies || taskSearched.dependencies,
+        ];
+
+        await pool.query(
+            `UPDATE tasks
+            SET (task_name, resource, start_date, end_date, duration, percent_complete, dependencies) = ($1, $2, $3, $4, $5, $6, $7)
+            WHERE task_id = ($8)`,
+            [...editedTask, taskIdToSearch]
+        );
+    } else {
+        throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
+    }
+
+    //
+    //     const newTask = await pool.query(
+    //         `INSERT INTO tasks (task_name, resource, start_date, end_date, duration, percent_complete, dependencies)
+    //         VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;`,
+    //         [
+    //             'Sample task',
+    //             'Resource for sample task',
+    //             defaultStartDate,
+    //             defaultEndDate,
+    //             duration,
+    //             0,
+    //             null,
+    //         ]
+    //     );
+});
