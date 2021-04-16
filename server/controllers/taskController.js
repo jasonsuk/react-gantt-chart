@@ -85,19 +85,27 @@ export const editTask = asyncHandler(async (req, res) => {
     } else {
         throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
     }
+});
 
-    //
-    //     const newTask = await pool.query(
-    //         `INSERT INTO tasks (task_name, resource, start_date, end_date, duration, percent_complete, dependencies)
-    //         VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;`,
-    //         [
-    //             'Sample task',
-    //             'Resource for sample task',
-    //             defaultStartDate,
-    //             defaultEndDate,
-    //             duration,
-    //             0,
-    //             null,
-    //         ]
-    //     );
+// @DESC: Delete a task
+// @ROUTE: DELETE /api/records/:id/delete
+// @ACCESS: Public
+
+export const deleteTask = asyncHandler(async (req, res) => {
+    const taskIdToSearch = req.params.id;
+
+    // Find task by id
+    const { rows } = await pool.query(
+        `SELECT * FROM tasks WHERE task_id = ${taskIdToSearch}`
+    );
+
+    const taskSearched = rows[0];
+
+    if (taskSearched) {
+        await pool.query(`DELETE FROM tasks WHERE task_id = $1`, [
+            taskSearched.task_id,
+        ]);
+    } else {
+        throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
+    }
 });
