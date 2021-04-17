@@ -6,6 +6,10 @@ import {
     TASK_CREATE_SUCCESS,
     TASK_CREATE_FAIL,
     TASK_CREATE_RESET,
+    TASK_DELETE_REQUEST,
+    TASK_DELETE_SUCCESS,
+    TASK_DELETE_FAIL,
+    TASK_DELETE_RESET,
 } from '../constants/taskConstants.js';
 
 export const taskListReducer = (state = {}, action) => {
@@ -30,6 +34,21 @@ export const taskCreateReducer = (state = {}, action) => {
         case TASK_CREATE_FAIL:
             return { loading: false, error: action.payload };
         case TASK_CREATE_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const taskDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case TASK_DELETE_REQUEST:
+            return { loading: true, ...state };
+        case TASK_DELETE_SUCCESS:
+            return { loading: false, success: true, payload: action.payload };
+        case TASK_DELETE_FAIL:
+            return { loading: false, error: action.payload };
+        case TASK_DELETE_RESET:
             return {};
         default:
             return state;
