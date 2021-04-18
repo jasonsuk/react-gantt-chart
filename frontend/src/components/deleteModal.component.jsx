@@ -4,12 +4,9 @@ import { Modal, Form, Button } from 'react-bootstrap';
 
 import { deleteTask } from '../redux/actions/taskActions.js';
 
-const DeleteModal = ({
-    showDeleteModal,
-    hideDeleteModalHandler,
-    tasks,
-    history,
-}) => {
+import { TASK_DELETE_RESET } from '../redux/constants/taskConstants.js';
+
+const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
     const [deleteTaskId, setDeleteTaskId] = useState();
 
     const dispatch = useDispatch();
@@ -20,6 +17,10 @@ const DeleteModal = ({
     useEffect(() => {
         if (successDelete) {
             console.log('Deleted task');
+            // Reset task delete state
+            dispatch({ type: TASK_DELETE_RESET });
+
+            // Close the modal
             hideDeleteModalHandler();
 
             // Reload page to update the change
@@ -30,9 +31,14 @@ const DeleteModal = ({
     const deleteTaskHandler = (taskId) => {
         // Parsing integer i.e. Task Id 1 -> 1
         const parseTaskId = parseInt(taskId.match(/(\d+)/g));
-        console.log(`Deleting Task Id ${parseTaskId}`);
-        console.log(parseTaskId);
-        dispatch(deleteTask(parseTaskId));
+
+        if (
+            window.confirm(
+                `Are you sure? You are permanently deleting ${taskId}.`
+            )
+        ) {
+            dispatch(deleteTask(parseTaskId));
+        }
     };
 
     return (
