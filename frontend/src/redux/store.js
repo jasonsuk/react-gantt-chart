@@ -6,12 +6,14 @@ import {
     taskListReducer,
     taskCreateReducer,
     taskDeleteReducer,
+    taskEditReducer,
 } from './reducers/taskReducers.js';
 
 const reducer = combineReducers({
     taskList: taskListReducer,
     taskCreate: taskCreateReducer,
     taskDelete: taskDeleteReducer,
+    taskEdit: taskEditReducer,
 });
 
 const initialState = {};

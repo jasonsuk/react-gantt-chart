@@ -10,6 +10,9 @@ import {
     TASK_DELETE_REQUEST,
     TASK_DELETE_SUCCESS,
     TASK_DELETE_FAIL,
+    TASK_EDIT_REQUEST,
+    TASK_EDIT_SUCCESS,
+    TASK_EDIT_FAIL,
 } from '../constants/taskConstants.js';
 
 export const listTasks = () => async (dispatch) => {
@@ -59,6 +62,24 @@ export const deleteTask = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: TASK_DELETE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const editTask = (task) => async (dispatch) => {
+    try {
+        dispatch({ type: TASK_EDIT_REQUEST });
+
+        await axios.put(`/api/tasks/${task.task_id}/edit`);
+        dispatch({ type: TASK_EDIT_SUCCESS });
+        //
+    } catch (error) {
+        dispatch({
+            type: TASK_EDIT_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

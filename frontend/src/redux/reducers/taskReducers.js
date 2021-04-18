@@ -10,6 +10,10 @@ import {
     TASK_DELETE_SUCCESS,
     TASK_DELETE_FAIL,
     TASK_DELETE_RESET,
+    TASK_EDIT_REQUEST,
+    TASK_EDIT_SUCCESS,
+    TASK_EDIT_FAIL,
+    TASK_EDIT_RESET,
 } from '../constants/taskConstants.js';
 
 export const taskListReducer = (state = {}, action) => {
@@ -49,6 +53,21 @@ export const taskDeleteReducer = (state = {}, action) => {
         case TASK_DELETE_FAIL:
             return { loading: false, error: action.payload };
         case TASK_DELETE_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const taskEditReducer = (state = {}, action) => {
+    switch (action.payload) {
+        case TASK_EDIT_REQUEST:
+            return { loading: true, ...state };
+        case TASK_EDIT_SUCCESS:
+            return { loading: false, success: true };
+        case TASK_EDIT_FAIL:
+            return { loading: false, error: action.payload };
+        case TASK_EDIT_RESET:
             return {};
         default:
             return state;
