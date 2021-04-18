@@ -53,7 +53,7 @@ export const editTask = asyncHandler(async (req, res) => {
         `SELECT * FROM tasks WHERE task_id = ${taskIdToSearch}`
     );
 
-    const taskSearched = rows[0];
+    const taskSearched = rows;
 
     if (taskSearched) {
         const {
@@ -65,7 +65,7 @@ export const editTask = asyncHandler(async (req, res) => {
             dependencies,
         } = req.body;
 
-        const editedTask = [
+        const newData = [
             taskName || taskSearched.task_name,
             resource || taskSearched.resource,
             new Date(startDate) || taskSearched.start_date,
@@ -76,12 +76,15 @@ export const editTask = asyncHandler(async (req, res) => {
             dependencies || taskSearched.dependencies,
         ];
 
-        await pool.query(
+        const editedTask = await pool.query(
             `UPDATE tasks
             SET (task_name, resource, start_date, end_date, duration, percent_complete, dependencies) = ($1, $2, $3, $4, $5, $6, $7)
-            WHERE task_id = ($8)`,
-            [...editedTask, taskIdToSearch]
+            WHERE task_id = ($8) RETURNING *`,
+            [...newData, taskIdToSearch]
         );
+
+        res.status(200).json(editedTask.rows);
+        //
     } else {
         throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
     }
@@ -105,6 +108,9 @@ export const deleteTask = asyncHandler(async (req, res) => {
         await pool.query(`DELETE FROM tasks WHERE task_id = $1`, [
             taskSearched.task_id,
         ]);
+        res.status(200).json({
+            message: `Successfully deleted Task# ${taskIdToSearch}`,
+        });
     } else {
         throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
     }

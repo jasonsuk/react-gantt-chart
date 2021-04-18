@@ -40,12 +40,12 @@ const HomePage = ({ history }) => {
     };
 
     // Edit task //
-    const editTaskHandler = () => {
+    const showEditModalHandler = () => {
         console.log('Editing task');
         setEditModal(true);
     };
 
-    const saveEditTaskHandler = () => {
+    const editTaskHandler = () => {
         console.log('Edited task');
         setEditModal(false);
         history.push('/');
@@ -59,14 +59,9 @@ const HomePage = ({ history }) => {
     };
 
     // Delete task //
-    const deleteTaskHandler = () => {
+    const showDeleteModalHandler = () => {
         console.log('Deleting task');
         setDeleteModal(true);
-    };
-
-    const saveDeleteTaskHandler = () => {
-        console.log('Deleted task');
-        setDeleteModal(false);
     };
 
     const hideDeleteModalHandler = () => {
@@ -85,10 +80,16 @@ const HomePage = ({ history }) => {
                         <Button variant="success" onClick={createTaskHandler}>
                             Create Task
                         </Button>
-                        <Button variant="warning" onClick={editTaskHandler}>
+                        <Button
+                            variant="warning"
+                            onClick={showEditModalHandler}
+                        >
                             Edit Task
                         </Button>
-                        <Button variant="danger" onClick={deleteTaskHandler}>
+                        <Button
+                            variant="danger"
+                            onClick={showDeleteModalHandler}
+                        >
                             Delete Task
                         </Button>
                     </ButtonGroup>
@@ -100,15 +101,16 @@ const HomePage = ({ history }) => {
 
             <Gantt tasks={tasks} />
             <EditModal
-                showEdit={editModal}
+                showEditModal={editModal}
                 hideEditModalHandler={hideEditModalHandler}
-                saveEditTaskHandler={saveEditTaskHandler}
+                editTaskHandler={editTaskHandler}
+                tasks={tasks && tasks}
             />
             <DeleteModal
-                showDelete={deleteModal}
+                showDeleteModal={deleteModal}
                 hideDeleteModalHandler={hideDeleteModalHandler}
-                saveDeleteTaskHandler={saveDeleteTaskHandler}
                 tasks={tasks && tasks}
+                deleteModal={deleteModal}
             />
         </Container>
     );

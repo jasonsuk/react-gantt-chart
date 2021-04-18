@@ -49,12 +49,12 @@ export const createTask = () => async (dispatch) => {
     }
 };
 
-export const deletTask = (id) => async (dispatch) => {
+export const deleteTask = (id) => async (dispatch) => {
     try {
         dispatch({ type: TASK_DELETE_REQUEST });
 
-        const { data } = await axios.delete(`/api/tasks/${id}/delete`);
-        dispatch({ type: TASK_DELETE_SUCCESS, payload: { data } });
+        await axios.delete(`/api/tasks/${id}/delete`);
+        dispatch({ type: TASK_DELETE_SUCCESS });
         //
     } catch (error) {
         dispatch({

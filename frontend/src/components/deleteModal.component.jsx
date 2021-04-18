@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Form, Button } from 'react-bootstrap';
 
+import { deleteTask } from '../redux/actions/taskActions.js';
+
 const DeleteModal = ({
-    showDelete,
+    showDeleteModal,
     hideDeleteModalHandler,
-    saveDeleteTaskHandler,
     tasks,
+    history,
 }) => {
-    const [deleteTaskId, setDeleteTaskId] = useState('Selete task to delete');
+    const [deleteTaskId, setDeleteTaskId] = useState();
+
+    const dispatch = useDispatch();
+
+    const taskDelete = useSelector((state) => state.taskDelete);
+    const { success: successDelete } = taskDelete;
+
+    useEffect(() => {
+        if (successDelete) {
+            console.log('Deleted task');
+            hideDeleteModalHandler();
+
+            // Reload page to update the change
+            window.location.reload();
+        }
+    }, [dispatch, successDelete, hideDeleteModalHandler]);
+
+    const deleteTaskHandler = (taskId) => {
+        // Parsing integer i.e. Task Id 1 -> 1
+        const parseTaskId = parseInt(taskId.match(/(\d+)/g));
+        console.log(`Deleting Task Id ${parseTaskId}`);
+        console.log(parseTaskId);
+        dispatch(deleteTask(parseTaskId));
+    };
 
     return (
-        <Modal show={showDelete} onHide={hideDeleteModalHandler}>
+        <Modal show={showDeleteModal} onHide={hideDeleteModalHandler}>
             <Modal.Header closeButton>
                 <Modal.Title>Edit task</Modal.Title>
             </Modal.Header>
@@ -24,11 +50,7 @@ const DeleteModal = ({
                         <Form.Control
                             as="select"
                             value={deleteTaskId}
-                            onChange={(e) =>
-                                setDeleteTaskId(
-                                    parseInt(e.target.value.match(/(\d+)/g))
-                                )
-                            }
+                            onChange={(e) => setDeleteTaskId(e.target.value)}
                         >
                             {tasks &&
                                 tasks.map((task) => (
@@ -44,7 +66,10 @@ const DeleteModal = ({
                 <Button variant="secondary" onClick={hideDeleteModalHandler}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={saveDeleteTaskHandler}>
+                <Button
+                    variant="primary"
+                    onClick={() => deleteTaskHandler(deleteTaskId)}
+                >
                     Delete
                 </Button>
             </Modal.Footer>
