@@ -60,11 +60,11 @@ export const taskDeleteReducer = (state = {}, action) => {
 };
 
 export const taskEditReducer = (state = {}, action) => {
-    switch (action.payload) {
+    switch (action.type) {
         case TASK_EDIT_REQUEST:
             return { loading: true, ...state };
         case TASK_EDIT_SUCCESS:
-            return { loading: false, success: true };
+            return { loading: false, success: true, payload: action.payload };
         case TASK_EDIT_FAIL:
             return { loading: false, error: action.payload };
         case TASK_EDIT_RESET:

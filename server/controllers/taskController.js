@@ -42,18 +42,18 @@ export const createTask = asyncHandler(async (req, res) => {
 });
 
 // @DESC: Edit task
-// @ROUTE: PUT /api/records/:id/edit
+// @ROUTE: PUT /api/tasks/:id/edit
 // @ACCESS: Public
 
 export const editTask = asyncHandler(async (req, res) => {
-    const taskIdToSearch = req.params.id;
+    const taskIdToSearch = parseInt(req.params.id);
 
     // Find task by id
     const { rows } = await pool.query(
         `SELECT * FROM tasks WHERE task_id = ${taskIdToSearch}`
     );
 
-    const taskSearched = rows;
+    const taskSearched = rows[0];
 
     if (taskSearched) {
         const {
@@ -62,28 +62,27 @@ export const editTask = asyncHandler(async (req, res) => {
             startDate,
             endDate,
             percentComplete,
-            dependencies,
         } = req.body;
 
         const newData = [
             taskName || taskSearched.task_name,
             resource || taskSearched.resource,
-            new Date(startDate) || taskSearched.start_date,
-            new Date(endDate) || taskSearched.end_date,
+            startDate || taskSearched.start_date,
+            endDate || taskSearched.end_date,
             new Date(endDate) - new Date(startDate) ||
                 taskSearched.end_date - taskSearched.start_date,
-            percentComplete || taskSearched.percent_complete,
-            dependencies || taskSearched.dependencies,
+            parseInt(percentComplete) || taskSearched.percent_complete,
+            null, // no dependencies functionality yet as not needed
         ];
 
-        const editedTask = await pool.query(
+        const { data } = await pool.query(
             `UPDATE tasks
             SET (task_name, resource, start_date, end_date, duration, percent_complete, dependencies) = ($1, $2, $3, $4, $5, $6, $7)
-            WHERE task_id = ($8) RETURNING *`,
+            WHERE task_id = ($8)`,
             [...newData, taskIdToSearch]
         );
 
-        res.status(200).json(editedTask.rows);
+        res.status(200).json(data);
         //
     } else {
         throw new Error(`ERROR: Task ${taskIdToSearch} not found`);

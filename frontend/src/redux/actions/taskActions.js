@@ -74,8 +74,15 @@ export const editTask = (task) => async (dispatch) => {
     try {
         dispatch({ type: TASK_EDIT_REQUEST });
 
-        await axios.put(`/api/tasks/${task.task_id}/edit`);
-        dispatch({ type: TASK_EDIT_SUCCESS });
+        // Params id
+        const paramId = task.taskId;
+
+        // Delete task id
+        delete task.taskId;
+
+        const { data } = await axios.put(`/api/tasks/${paramId}/edit`, task);
+        dispatch({ type: TASK_EDIT_SUCCESS, payload: data });
+
         //
     } catch (error) {
         dispatch({

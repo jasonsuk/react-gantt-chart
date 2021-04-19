@@ -7,9 +7,8 @@ import EditModal from '../components/editModal.component.jsx';
 import DeleteModal from '../components/deleteModal.component.jsx';
 
 import { createTask, listTasks } from '../redux/actions/taskActions.js';
-import { TASK_CREATE_RESET } from '../redux/constants/taskConstants.js';
 
-const HomePage = ({ history }) => {
+const HomePage = () => {
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
@@ -19,7 +18,7 @@ const HomePage = ({ history }) => {
     const { tasks } = taskList;
 
     const taskCreate = useSelector((state) => state.taskCreate);
-    const { success: successCreateTask } = taskCreate;
+    const { success: successCreateTask, task: createdTask } = taskCreate;
 
     useEffect(() => {
         if (successCreateTask) {
@@ -45,17 +44,10 @@ const HomePage = ({ history }) => {
         setEditModal(true);
     };
 
-    const editTaskHandler = () => {
-        console.log('Edited task');
-        setEditModal(false);
-        history.push('/');
-    };
-
     const hideEditModalHandler = () => {
         console.log('Hiding edit modal');
         setEditModal(false);
-        dispatch({ type: TASK_CREATE_RESET });
-        history.push('/');
+        window.location.reload();
     };
 
     // Delete task //
@@ -67,7 +59,7 @@ const HomePage = ({ history }) => {
     const hideDeleteModalHandler = () => {
         console.log('Hiding delete modal');
         setDeleteModal(false);
-        // dispatch({ type: TASK_CREATE_RESET });
+        window.location.reload();
     };
 
     const currentDate = new Date().toDateString();
@@ -103,14 +95,13 @@ const HomePage = ({ history }) => {
             <EditModal
                 showEditModal={editModal}
                 hideEditModalHandler={hideEditModalHandler}
-                editTaskHandler={editTaskHandler}
                 tasks={tasks && tasks}
+                createdTask={createdTask ? createdTask : null}
             />
             <DeleteModal
                 showDeleteModal={deleteModal}
                 hideDeleteModalHandler={hideDeleteModalHandler}
                 tasks={tasks && tasks}
-                deleteModal={deleteModal}
             />
         </Container>
     );
