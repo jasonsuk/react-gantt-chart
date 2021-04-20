@@ -33,9 +33,7 @@ const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
         const parseTaskId = parseInt(taskId.match(/(\d+)/g));
 
         if (
-            window.confirm(
-                `Are you sure? You are permanently deleting ${taskId}.`
-            )
+            window.confirm(`Are you sure? The task will be permanently deleted`)
         ) {
             dispatch(deleteTask(parseTaskId));
         }
@@ -61,7 +59,7 @@ const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
                             {tasks &&
                                 tasks.map((task) => (
                                     <option key={task.task_id}>
-                                        Task Id {task.task_id}
+                                        {task.task_id}: {task.task_name}
                                     </option>
                                 ))}
                         </Form.Control>

@@ -18,7 +18,7 @@ const HomePage = () => {
     const { tasks } = taskList;
 
     const taskCreate = useSelector((state) => state.taskCreate);
-    const { success: successCreateTask, task: createdTask } = taskCreate;
+    const { success: successCreateTask, task: taskCreated } = taskCreate;
 
     useEffect(() => {
         if (successCreateTask) {
@@ -35,7 +35,11 @@ const HomePage = () => {
     // Create new task //
     const createTaskHandler = () => {
         console.log('Creating task');
+
         dispatch(createTask());
+
+        // Load all tasks including the created one
+        dispatch(listTasks());
     };
 
     // Edit task //
@@ -96,7 +100,7 @@ const HomePage = () => {
                 showEditModal={editModal}
                 hideEditModalHandler={hideEditModalHandler}
                 tasks={tasks && tasks}
-                createdTask={createdTask ? createdTask : null}
+                taskCreated={taskCreated && taskCreated}
             />
             <DeleteModal
                 showDeleteModal={deleteModal}

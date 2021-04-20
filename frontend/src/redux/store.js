@@ -4,6 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import {
     taskListReducer,
+    taskListSingleReducer,
     taskCreateReducer,
     taskDeleteReducer,
     taskEditReducer,
@@ -11,6 +12,7 @@ import {
 
 const reducer = combineReducers({
     taskList: taskListReducer,
+    taskListSingle: taskListSingleReducer,
     taskCreate: taskCreateReducer,
     taskDelete: taskDeleteReducer,
     taskEdit: taskEditReducer,

@@ -11,7 +11,7 @@ const App = () => {
         <Router>
             <Header />
             <main>
-                <Route to="/" component={HomePage}></Route>
+                <Route to="/" component={HomePage} exact></Route>
             </main>
             <Footer />
         </Router>

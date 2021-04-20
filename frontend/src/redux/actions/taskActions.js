@@ -4,6 +4,9 @@ import {
     TASK_LIST_REQUEST,
     TASK_LIST_SUCCESS,
     TASK_LIST_FAIL,
+    TASK_LIST_SINGLE_REQUEST,
+    TASK_LIST_SINGLE_SUCCESS,
+    TASK_LIST_SINGLE_FAIL,
     TASK_CREATE_REQUEST,
     TASK_CREATE_SUCCESS,
     TASK_CREATE_FAIL,
@@ -26,6 +29,25 @@ export const listTasks = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: TASK_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const listSingleTask = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: TASK_LIST_SINGLE_REQUEST });
+
+        const { data } = await axios.get(`/api/tasks/${id}`);
+
+        dispatch({ type: TASK_LIST_SINGLE_SUCCESS, payload: data });
+        //
+    } catch (error) {
+        dispatch({
+            type: TASK_LIST_SINGLE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

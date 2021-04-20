@@ -5,13 +5,18 @@ import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
 import { editTask } from '../redux/actions/taskActions.js';
 import { TASK_EDIT_RESET } from '../redux/constants/taskConstants';
 
-const EditModal = ({ showEditModal, hideEditModalHandler, tasks }) => {
+const EditModal = ({
+    showEditModal,
+    hideEditModalHandler,
+    tasks,
+    taskCreated,
+}) => {
     // Initial date string with the format of 'yyyy-MM-dd'
+
     const initialDateStr = new Date().toISOString().split('T')[0];
 
     const [editTaskId, setEditTaskId] = useState(1);
     const [editTaskName, setEditTaskName] = useState('');
-    const [editResource, setEditResource] = useState('');
     const [editStartDate, setEditStartDate] = useState(initialDateStr);
     const [editEndDate, setEditEndDate] = useState(initialDateStr);
     const [editPercentComplete, setEditPercentComplete] = useState(0);
@@ -34,21 +39,20 @@ const EditModal = ({ showEditModal, hideEditModalHandler, tasks }) => {
             // Reset task edit state
             dispatch({ type: TASK_EDIT_RESET });
         }
-    }, [dispatch, hideEditModalHandler, successEdit]);
+    }, [dispatch, successEdit, hideEditModalHandler]);
 
-    const editTaskHandler = () => {
-        const parseTaskId = parseInt(editTaskId.match(/(\d+)/g));
+    const editTaskHandler = (id) => {
+        console.log('Edited');
+
+        console.log(id);
 
         dispatch(
             editTask({
-                taskId: parseTaskId,
+                taskId: id,
                 taskName: editTaskName,
-                resource: editResource,
                 startDate: editStartDate,
                 endDate: editEndDate,
                 percentComplete: editPercentComplete,
-                // No dependencies functionality yet as not needed
-                // So will stay null
             })
         );
     };
@@ -56,26 +60,34 @@ const EditModal = ({ showEditModal, hideEditModalHandler, tasks }) => {
     return (
         <Modal show={showEditModal} onHide={hideEditModalHandler}>
             <Modal.Header closeButton>
-                <Modal.Title>Edit task</Modal.Title>
+                <Modal.Title>
+                    {taskCreated ? 'Create' : 'Edit'} task
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
                     <Form.Group controlId="selectEditTaskId">
                         <Form.Label>
-                            Select id for task that you want to change.
+                            Select task that you want to change
                         </Form.Label>
-                        <Form.Control
-                            as="select"
-                            value={editTaskId}
-                            onChange={(e) => setEditTaskId(e.target.value)}
-                        >
-                            {tasks &&
-                                tasks.map((task) => (
-                                    <option key={task.task_id}>
-                                        Task Id {task.task_id}
-                                    </option>
-                                ))}
-                        </Form.Control>
+                        {taskCreated ? (
+                            <Form.Text style={{ fontSize: '15px' }}>
+                                Task {taskCreated[0].task_id}
+                            </Form.Text>
+                        ) : (
+                            <Form.Control
+                                as="select"
+                                value={editTaskId}
+                                onChange={(e) => setEditTaskId(e.target.value)}
+                            >
+                                {tasks &&
+                                    tasks.map((task) => (
+                                        <option key={task.task_id}>
+                                            {task.task_id}: {task.task_name}
+                                        </option>
+                                    ))}
+                            </Form.Control>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="editTaskName">
                         <Form.Label>Task name</Form.Label>
@@ -86,17 +98,9 @@ const EditModal = ({ showEditModal, hideEditModalHandler, tasks }) => {
                             onChange={(e) => setEditTaskName(e.target.value)}
                         />
                         <Form.Text className="text-muted">
-                            It will appear as index for task
+                            Please write a new task name if you wish to change
+                            it.
                         </Form.Text>
-                    </Form.Group>
-                    <Form.Group controlId="editResource">
-                        <Form.Label>Resources</Form.Label>
-                        <Form.Control
-                            type="textarea"
-                            placeholder="Specify resource needed for task"
-                            value={editResource}
-                            onChange={(e) => setEditResource(e.target.value)}
-                        />
                     </Form.Group>
                     <Form.Row>
                         <Form.Group controlId="editStartDate" as={Col} md={6}>
@@ -140,7 +144,16 @@ const EditModal = ({ showEditModal, hideEditModalHandler, tasks }) => {
                             >
                                 Close
                             </Button>
-                            <Button variant="primary" onClick={editTaskHandler}>
+                            <Button
+                                variant="primary"
+                                onClick={() =>
+                                    editTaskHandler(
+                                        taskCreated
+                                            ? taskCreated[0].task_id
+                                            : editTaskId
+                                    )
+                                }
+                            >
                                 Save Changes
                             </Button>
                         </Col>
