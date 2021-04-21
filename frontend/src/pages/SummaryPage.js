@@ -45,6 +45,11 @@ const SummaryPage = ({ history }) => {
         }
     };
 
+    const millisecondToDays = (milsec) => {
+        const days = +milsec / 1000 / 60 / 60 / 24;
+        return days;
+    };
+
     const buttonStyle = {
         marginRight: '2px',
         marginTop: '2px',
@@ -58,7 +63,7 @@ const SummaryPage = ({ history }) => {
                 <Message>{error.message}</Message>
             ) : (
                 <Container className="text-center">
-                    <Row className="align-items-md-center">
+                    <Row className="align-items-center">
                         <Col className="my-4 text-left">
                             <h3>Task Summary</h3>
                         </Col>
@@ -77,7 +82,7 @@ const SummaryPage = ({ history }) => {
                                 <th>End date</th>
                                 <th>Duration</th>
                                 <th>Percent completed</th>
-                                <th></th>
+                                <th>sdf</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,7 +97,10 @@ const SummaryPage = ({ history }) => {
                                         <td>
                                             {task.end_date.substring(0, 10)}
                                         </td>
-                                        <td>{task.duration} days</td>
+                                        <td>
+                                            {millisecondToDays(task.duration)}
+                                            days
+                                        </td>
                                         <td>{task.percent_complete} %</td>
                                         <th>
                                             <LinkContainer

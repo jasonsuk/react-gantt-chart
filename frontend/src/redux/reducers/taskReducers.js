@@ -37,7 +37,7 @@ export const taskListSingleReducer = (state = {}, action) => {
         case TASK_LIST_SINGLE_REQUEST:
             return { loading: true, ...state };
         case TASK_LIST_SINGLE_SUCCESS:
-            return { loading: false, tasks: action.payload };
+            return { loading: false, task: action.payload };
         case TASK_LIST_SINGLE_FAIL:
             return { loading: false, error: action.payload };
         default:
