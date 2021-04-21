@@ -130,3 +130,37 @@ export const deleteTask = asyncHandler(async (req, res) => {
         throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
     }
 });
+
+// @DESC: Archive a task
+// @ROUTE: POST /api/tasks/:id/archive
+// @ACCESS: Public
+
+export const archiveTask = asyncHandler(async (req, res) => {
+    const taskIdToSearch = req.params.id;
+
+    // Find task by id
+    const { rows } = await pool.query(
+        `SELECT * FROM tasks WHERE task_id = ${taskIdToSearch}`
+    );
+
+    const taskSearched = rows[0];
+
+    if (taskSearched) {
+        const archivedTask = await pool.query(
+            `INSERT INTO archives (task_id, task_name, resource, start_date, end_date, completed_date)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+            [
+                taskSearched.task_id,
+                taskSearched.task_name,
+                taskSearched.resource,
+                taskSearched.start_date.toISOString().split('T')[0],
+                taskSearched.end_date.toISOString().split('T')[0],
+                new Date().toISOString().split('T')[0],
+            ]
+        );
+
+        res.status(201).json(archivedTask.rows);
+    } else {
+        throw new Error(`ERROR: Task ${taskIdToSearch} not found`);
+    }
+});
