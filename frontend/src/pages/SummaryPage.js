@@ -1,28 +1,48 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container, Table, Button } from 'react-bootstrap';
+import { Container, Table, Button, Row, Col } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 import Loader from '../components/Loader.component.jsx';
 import Message from '../components/Message.component.jsx';
 
-import { listTasks } from '../redux/actions/taskActions.js';
+import {
+    listTasks,
+    createTask,
+    deleteTask,
+} from '../redux/actions/taskActions.js';
+import { TASK_CREATE_RESET } from '../redux/constants/taskConstants.js';
 
-const SummaryPage = () => {
+const SummaryPage = ({ history }) => {
     const dispatch = useDispatch();
 
     const taskList = useSelector((state) => state.taskList);
     const { loading, error, tasks } = taskList;
 
-    useEffect(() => {
-        dispatch(listTasks());
-    }, [dispatch]);
+    const taskCreate = useSelector((state) => state.taskCreate);
+    const { success: successCreate, task: createdTask } = taskCreate;
 
-    const editTaskHandler = () => {
-        console.log('Editing task the other way');
+    const taskDelete = useSelector((state) => state.taskDelete);
+    const { success: successDelete } = taskDelete;
+
+    useEffect(() => {
+        dispatch({ type: TASK_CREATE_RESET });
+
+        if (successCreate) {
+            history.push(`/tasks/${createdTask[0].task_id}/edit`);
+        } else {
+            dispatch(listTasks());
+        }
+    }, [dispatch, history, successCreate, createdTask, successDelete]);
+
+    const createTaskHandler = () => {
+        dispatch(createTask());
     };
 
-    const deleteTaskHandler = () => {
-        console.log('Deleting task the other way');
+    const deleteTaskHandler = (id) => {
+        if (window.confirm('Are you sure?')) {
+            dispatch(deleteTask(id));
+        }
     };
 
     const buttonStyle = {
@@ -38,7 +58,16 @@ const SummaryPage = () => {
                 <Message>{error.message}</Message>
             ) : (
                 <Container className="text-center">
-                    <h3 className="my-4">Task Summary</h3>
+                    <Row className="align-items-md-center">
+                        <Col className="my-4 text-left">
+                            <h3>Task Summary</h3>
+                        </Col>
+                        <Col className="text-right">
+                            <Button onClick={() => createTaskHandler()}>
+                                Create task
+                            </Button>
+                        </Col>
+                    </Row>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -66,16 +95,14 @@ const SummaryPage = () => {
                                         <td>{task.duration} days</td>
                                         <td>{task.percent_complete} %</td>
                                         <th>
-                                            <Button
+                                            <LinkContainer
+                                                to={`/tasks/${task.task_id}/edit`}
                                                 style={buttonStyle}
-                                                onClick={() =>
-                                                    editTaskHandler(
-                                                        task.task_id
-                                                    )
-                                                }
                                             >
-                                                <i className="fas fa-edit"></i>
-                                            </Button>
+                                                <Button>
+                                                    <i className="fas fa-edit"></i>
+                                                </Button>
+                                            </LinkContainer>
 
                                             <Button
                                                 style={buttonStyle}

@@ -7,6 +7,7 @@ import Footer from './components/Footer.component.jsx';
 
 import HomePage from './pages/HomePage.js';
 import SummaryPage from './pages/SummaryPage.js';
+import TaskEditPage from './pages/TaskEditPage.js';
 
 const App = () => {
     return (
@@ -16,6 +17,7 @@ const App = () => {
                 <Container className="my-3">
                     <Route path="/" component={HomePage} exact />
                     <Route path="/summary" component={SummaryPage} />
+                    <Route path="/tasks/:id/edit" component={TaskEditPage} />
                 </Container>
             </main>
             <Footer />
