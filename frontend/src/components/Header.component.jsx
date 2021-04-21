@@ -18,6 +18,9 @@ const Header = () => {
                         <LinkContainer to="/summary">
                             <Nav.Link>Summary</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to="/archives">
+                            <Nav.Link>Archives</Nav.Link>
+                        </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

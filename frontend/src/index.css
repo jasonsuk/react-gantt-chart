@@ -1,3 +1,14 @@
 main {
     min-height: 75vh;
 }
+
+h1,
+h2,
+h3,
+p {
+    margin: 10px auto;
+}
+
+p.remark {
+    color: #666;
+}

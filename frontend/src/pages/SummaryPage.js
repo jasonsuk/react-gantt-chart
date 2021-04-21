@@ -82,7 +82,7 @@ const SummaryPage = ({ history }) => {
                                 <th>End date</th>
                                 <th>Duration</th>
                                 <th>Percent completed</th>
-                                <th>sdf</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
