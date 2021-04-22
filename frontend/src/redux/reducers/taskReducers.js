@@ -17,6 +17,10 @@ import {
     TASK_EDIT_SUCCESS,
     TASK_EDIT_FAIL,
     TASK_EDIT_RESET,
+    TASK_ARCHIVE_REQUEST,
+    TASK_ARCHIVE_SUCCESS,
+    TASK_ARCHIVE_FAIL,
+    TASK_ARCHIVE_RESET,
 } from '../constants/taskConstants.js';
 
 export const taskListReducer = (state = {}, action) => {
@@ -84,6 +88,21 @@ export const taskEditReducer = (state = {}, action) => {
         case TASK_EDIT_FAIL:
             return { loading: false, error: action.payload };
         case TASK_EDIT_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const taskArchiveReducer = (state = {}, action) => {
+    switch (action.type) {
+        case TASK_ARCHIVE_REQUEST:
+            return { loading: true, ...state };
+        case TASK_ARCHIVE_SUCCESS:
+            return { loading: false, success: true, task: action.payload };
+        case TASK_ARCHIVE_FAIL:
+            return { loading: false, error: action.payload };
+        case TASK_ARCHIVE_RESET:
             return {};
         default:
             return state;

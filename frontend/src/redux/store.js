@@ -8,6 +8,7 @@ import {
     taskCreateReducer,
     taskDeleteReducer,
     taskEditReducer,
+    taskArchiveReducer,
 } from './reducers/taskReducers.js';
 
 const reducer = combineReducers({
@@ -16,6 +17,7 @@ const reducer = combineReducers({
     taskCreate: taskCreateReducer,
     taskDelete: taskDeleteReducer,
     taskEdit: taskEditReducer,
+    taskArchive: taskArchiveReducer,
 });
 
 const initialState = {};

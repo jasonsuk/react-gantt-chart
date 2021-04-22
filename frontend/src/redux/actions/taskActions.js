@@ -16,6 +16,9 @@ import {
     TASK_EDIT_REQUEST,
     TASK_EDIT_SUCCESS,
     TASK_EDIT_FAIL,
+    TASK_ARCHIVE_REQUEST,
+    TASK_ARCHIVE_SUCCESS,
+    TASK_ARCHIVE_FAIL,
 } from '../constants/taskConstants.js';
 
 export const listTasks = () => async (dispatch) => {
@@ -109,6 +112,24 @@ export const editTask = (task) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: TASK_EDIT_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const archiveTask = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: TASK_ARCHIVE_REQUEST });
+
+        const { data } = await axios.post(`/api/tasks/${id}/archive`);
+        dispatch({ type: TASK_ARCHIVE_SUCCESS, payload: data });
+        //
+    } catch (error) {
+        dispatch({
+            type: TASK_ARCHIVE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

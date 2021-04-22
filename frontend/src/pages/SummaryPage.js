@@ -10,8 +10,13 @@ import {
     listTasks,
     createTask,
     deleteTask,
+    archiveTask,
 } from '../redux/actions/taskActions.js';
-import { TASK_CREATE_RESET } from '../redux/constants/taskConstants.js';
+import {
+    TASK_CREATE_RESET,
+    TASK_DELETE_RESET,
+    TASK_ARCHIVE_RESET,
+} from '../redux/constants/taskConstants.js';
 
 const SummaryPage = ({ history }) => {
     const dispatch = useDispatch();
@@ -21,6 +26,9 @@ const SummaryPage = ({ history }) => {
 
     const taskCreate = useSelector((state) => state.taskCreate);
     const { success: successCreate, task: createdTask } = taskCreate;
+
+    const taskArchive = useSelector((state) => state.taskArchive);
+    const { success: successArchive } = taskArchive;
 
     const taskDelete = useSelector((state) => state.taskDelete);
     const { success: successDelete } = taskDelete;
@@ -33,7 +41,14 @@ const SummaryPage = ({ history }) => {
         } else {
             dispatch(listTasks());
         }
-    }, [dispatch, history, successCreate, createdTask, successDelete]);
+    }, [
+        dispatch,
+        history,
+        successCreate,
+        createdTask,
+        successArchive,
+        successDelete,
+    ]);
 
     const createTaskHandler = () => {
         dispatch(createTask());
@@ -41,8 +56,15 @@ const SummaryPage = ({ history }) => {
 
     const deleteTaskHandler = (id) => {
         if (window.confirm('Are you sure?')) {
-            dispatch(deleteTask(id));
+            dispatch(archiveTask(id));
+
+            setTimeout(() => {
+                dispatch(deleteTask(id));
+            }, 2000);
         }
+
+        dispatch({ type: TASK_ARCHIVE_RESET });
+        dispatch({ type: TASK_DELETE_RESET });
     };
 
     const millisecondToDays = (milsec) => {
