@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import taskRouter from './routes/taskRoute.js';
+import archiveRouter from './routes/archiveRoute.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 // Environmental variables
@@ -23,6 +24,7 @@ app.use(express.json());
 
 // Routes //
 app.use('/api/tasks', taskRouter);
+app.use('/api/archives', archiveRouter);
 
 // Error handler //
 app.use(notFound);
