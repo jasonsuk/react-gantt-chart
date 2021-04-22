@@ -11,6 +11,8 @@ import {
     taskArchiveReducer,
 } from './reducers/taskReducers.js';
 
+import { archiveListReducer } from './reducers/archiveReducers.js';
+
 const reducer = combineReducers({
     taskList: taskListReducer,
     taskListSingle: taskListSingleReducer,
@@ -18,6 +20,7 @@ const reducer = combineReducers({
     taskDelete: taskDeleteReducer,
     taskEdit: taskEditReducer,
     taskArchive: taskArchiveReducer,
+    archiveList: archiveListReducer,
 });
 
 const initialState = {};
