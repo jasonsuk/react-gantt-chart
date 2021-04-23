@@ -37,8 +37,6 @@ const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
         }
     }, [dispatch, successArchive, successDelete, hideDeleteModalHandler]);
 
-    console.log(deleteTaskId);
-
     const deleteTaskHandler = (taskId) => {
         // Parsing integer i.e. Task Id 1 -> 1
         const parseTaskId = parseInt(taskId.match(/(\d+)/g)[0]);

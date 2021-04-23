@@ -17,7 +17,7 @@ const ArchivePage = () => {
         if (!archives) {
             dispatch(listArchives());
         }
-    }, [dispatch]);
+    }, [dispatch, archives]);
 
     return (
         <>

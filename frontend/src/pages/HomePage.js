@@ -27,9 +27,7 @@ const HomePage = () => {
         if (successCreateTask) {
             setEditModal(true);
         } else {
-            if (tasks) {
-                console.log('Tasks loaded');
-            } else {
+            if (!tasks) {
                 dispatch(listTasks());
             }
         }
