@@ -1,5 +1,5 @@
+import path from 'path';
 import express from 'express';
-// import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import taskRouter from './routes/taskRoute.js';
@@ -25,6 +25,17 @@ app.use(express.json());
 // Routes //
 app.use('/api/tasks', taskRouter);
 app.use('/api/archives', archiveRouter);
+
+// Deployment
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+    app.get('*', (req, res) =>
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+    );
+}
 
 // Error handler //
 app.use(notFound);

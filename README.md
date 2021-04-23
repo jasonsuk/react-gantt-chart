@@ -9,3 +9,11 @@ The existing gantt chart apps cost too much for a personal use, or are hard for 
 ## Tools
 
 I will be making a react component using [Google Charts](https://react-google-charts.com/gantt-chart) as it provides a good framework for gantt chart visualization which can be rendered in JavaScript.
+
+## Deployment
+
+#### Connect to PostgreSql database on Heroku
+
+    heroku addons:create heroku-postgresql:hobby-dev --app ganttchartapp21
+
+    heroku config --app ganttchart21
