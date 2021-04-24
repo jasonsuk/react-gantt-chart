@@ -8,19 +8,18 @@ import {
     TASK_DELETE_RESET,
     TASK_ARCHIVE_RESET,
 } from '../redux/constants/taskConstants.js';
+import ErrorMessage from './ErrorMessage.component.jsx';
 
 const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
-    const [deleteTaskId, setDeleteTaskId] = useState(
-        tasks ? `${tasks[0].task_id}: ${tasks[0].task_name}` : undefined
-    );
+    const [deleteTaskId, setDeleteTaskId] = useState(undefined);
 
     const dispatch = useDispatch();
 
     const taskArchive = useSelector((state) => state.taskArchive);
-    const { success: successArchive } = taskArchive;
+    const { success: successArchive, erro: errorArchive } = taskArchive;
 
     const taskDelete = useSelector((state) => state.taskDelete);
-    const { success: successDelete } = taskDelete;
+    const { success: successDelete, error: errorDelete } = taskDelete;
 
     useEffect(() => {
         if (successArchive && successDelete) {
@@ -55,10 +54,20 @@ const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
     return (
         <Modal show={showDeleteModal} onHide={hideDeleteModalHandler}>
             <Modal.Header closeButton>
-                <Modal.Title>Edit task</Modal.Title>
+                <Modal.Title>Delete task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
+                    {errorArchive && (
+                        <ErrorMessage variant="danger">
+                            {errorArchive}
+                        </ErrorMessage>
+                    )}
+                    {errorDelete && (
+                        <ErrorMessage variant="danger">
+                            {errorDelete}
+                        </ErrorMessage>
+                    )}
                     <Form.Group controlId="selectTaskId">
                         <Form.Label>
                             Select id of task that you want to delete
@@ -69,6 +78,7 @@ const DeleteModal = ({ showDeleteModal, hideDeleteModalHandler, tasks }) => {
                             value={deleteTaskId}
                             onChange={(e) => setDeleteTaskId(e.target.value)}
                         >
+                            <option>--None Selected--</option>
                             {tasks &&
                                 tasks.map((task) => (
                                     <option key={task.task_id}>

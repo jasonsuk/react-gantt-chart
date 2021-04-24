@@ -43,7 +43,6 @@ const TaskEditPage = ({ match, history }) => {
     }, [dispatch, task, editTaskId, successEdit, history]);
 
     const submitHandler = (e) => {
-        console.log('Editing');
         e.preventDefault();
         dispatch(
             editTask({

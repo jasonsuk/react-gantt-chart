@@ -5,6 +5,8 @@ import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
 import { editTask } from '../redux/actions/taskActions.js';
 import { TASK_EDIT_RESET } from '../redux/constants/taskConstants';
 
+import ErrorMessage from './ErrorMessage.component.jsx';
+
 const EditModal = ({
     showEditModal,
     hideEditModalHandler,
@@ -15,7 +17,7 @@ const EditModal = ({
 
     const initialDateStr = new Date().toISOString().split('T')[0];
 
-    const [editTaskId, setEditTaskId] = useState(1);
+    const [editTaskId, setEditTaskId] = useState(undefined);
     const [editTaskName, setEditTaskName] = useState('');
     const [editStartDate, setEditStartDate] = useState(initialDateStr);
     const [editEndDate, setEditEndDate] = useState(initialDateStr);
@@ -24,28 +26,22 @@ const EditModal = ({
     const dispatch = useDispatch();
 
     const taskEdit = useSelector((state) => state.taskEdit);
-    const { success: successEdit } = taskEdit;
+    const { success: successEdit, error: errorEdit } = taskEdit;
 
     useEffect(() => {
         if (successEdit) {
-            console.log('Edited task');
+            // Reset task edit state
+            dispatch({ type: TASK_EDIT_RESET });
 
             // Close the modal
             hideEditModalHandler();
 
             // Reload page to update the change
             window.location.reload();
-
-            // Reset task edit state
-            dispatch({ type: TASK_EDIT_RESET });
         }
     }, [dispatch, successEdit, hideEditModalHandler]);
 
     const editTaskHandler = (id) => {
-        console.log('Edited');
-
-        console.log(id);
-
         dispatch(
             editTask({
                 taskId: id,
@@ -66,6 +62,11 @@ const EditModal = ({
             </Modal.Header>
             <Modal.Body>
                 <Form>
+                    {errorEdit && (
+                        <ErrorMessage variant="danger">
+                            {errorEdit}
+                        </ErrorMessage>
+                    )}
                     <Form.Group controlId="selectEditTaskId">
                         <Form.Label>
                             Select task that you want to change
@@ -77,9 +78,12 @@ const EditModal = ({
                         ) : (
                             <Form.Control
                                 as="select"
-                                value={editTaskId}
+                                value={
+                                    editTaskId ? editTaskId : 'None selected'
+                                }
                                 onChange={(e) => setEditTaskId(e.target.value)}
                             >
+                                <option>-- None selected --</option>
                                 {tasks &&
                                     tasks.map((task) => (
                                         <option key={task.task_id}>

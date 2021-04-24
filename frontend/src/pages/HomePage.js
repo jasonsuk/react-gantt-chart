@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ButtonGroup, Button, Container, Row, Col } from 'react-bootstrap';
 
 import Gantt from '../components/Gantt.component.jsx';
-import EditModal from '../components/editModal.component.jsx';
-import DeleteModal from '../components/deleteModal.component.jsx';
+import EditModal from '../components/EditModal.component.jsx';
+import DeleteModal from '../components/DeleteModal.component.jsx';
 
 import Loader from '../components/Loader.component.jsx';
 import Message from '../components/Message.component.jsx';
@@ -35,8 +35,6 @@ const HomePage = () => {
 
     // Create new task //
     const createTaskHandler = () => {
-        console.log('Creating task');
-
         dispatch(createTask());
 
         // Load all tasks including the created one
@@ -45,24 +43,20 @@ const HomePage = () => {
 
     // Edit task //
     const showEditModalHandler = () => {
-        console.log('Editing task');
         setEditModal(true);
     };
 
     const hideEditModalHandler = () => {
-        console.log('Hiding edit modal');
         setEditModal(false);
         window.location.reload();
     };
 
     // Delete task //
     const showDeleteModalHandler = () => {
-        console.log('Deleting task');
         setDeleteModal(true);
     };
 
     const hideDeleteModalHandler = () => {
-        console.log('Hiding delete modal');
         setDeleteModal(false);
         window.location.reload();
     };
