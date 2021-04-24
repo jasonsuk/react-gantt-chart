@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ButtonGroup, Button, Container, Row, Col } from 'react-bootstrap';
 
 import Gantt from '../components/Gantt.component.jsx';
-import EditModal from '../components/EditModal.component.jsx';
-import DeleteModal from '../components/DeleteModal.component.jsx';
+import EditModal from '../components/editModal.component.jsx';
+import DeleteModal from '../components/deleteModal.component.jsx';
 
 import Loader from '../components/Loader.component.jsx';
 import Message from '../components/Message.component.jsx';
