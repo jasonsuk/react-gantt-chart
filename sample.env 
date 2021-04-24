@@ -1,0 +1,13 @@
+PORT=
+NODE_ENV=production # either development or production
+
+# Local PostgreSql credentials
+PG_USERNAME=        # Postgres username
+PG_PORT=            # usually 5432
+PG_PASSWORD=''      # no password set for the database
+PG_DATABASE=ganttdb # name of database
+PG_HOST=localhost   
+
+DATABASE_URL=       # database url created on heroku postgres server
+
+
